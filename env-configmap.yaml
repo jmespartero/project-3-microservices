@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  AWS_BUCKET: microservices-project-127366014667-dev
+  AWS_PROFILE: default 
+  AWS_REGION: us-east-1
+  POSTGRES_DB: postgres
+  POSTGRES_HOST: project3.c37vltnulqlt.us-east-1.rds.amazonaws.com
+  URL: http://localhost:8100
+metadata:
+  name: env-configmap
