@@ -1,21 +1,77 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: udagram-api-feed
+  name: backend-feed
   labels:
-    app: udagram-api-feed
+    app: backend-feed
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
-      app: udagram-api-feed
+      app: backend-feed
   template:
     metadata:
       labels:
-        app: udagram-api-feed
+        app: backend-feed
     spec:
       containers:
-      - name: udagram-api-feed
-        image: jmespartero/udagram-api-feed
+      - name: backend-feed
+        image: jmespartero/udagram-api-feed:v3
+        imagePullPolicy: Always
         ports:
-        - containerPort: 80
+        - containerPort: 8080
+        env:
+        - name: AWS_BUCKET
+          valueFrom:
+           configMapKeyRef:
+             name: env-configmap
+             key: AWS_BUCKET
+        - name: AWS_PROFILE
+          valueFrom:
+           configMapKeyRef:
+             name: env-configmap
+             key: AWS_PROFILE
+        - name: AWS_REGION
+          valueFrom:
+           configMapKeyRef:
+             name: env-configmap
+             key: AWS_REGION
+        - name: JWT_SECRET
+          valueFrom:
+           secretKeyRef:
+             name: env-configmap
+             key: JWT_SECRET
+        - name: POSTGRES_DB
+          valueFrom:
+           configMapKeyRef:
+             name: env-configmap
+             key: POSTGRES_DB
+        - name: POSTGRES_HOST
+          valueFrom:
+           configMapKeyRef:
+             name: env-configmap
+             key: POSTGRES_HOST
+        - name: URL
+          valueFrom:
+           configMapKeyRef:
+             name: env-configmap
+             key: URL
+        - name: POSTGRES_USERNAME
+          valueFrom:
+           secretKeyRef:
+             name: env-secret
+             key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+           secretKeyRef:
+             name: env-secret
+             key: POSTGRES_PASSWORD
+        volumeMounts:
+        - name: aws-secret
+          mountPath: "/root/.aws/"
+          readOnly: true 
+      restartPolicy: Always
+      volumes:
+      - name: aws-secret
+        secret:
+         secretName: aws-secret

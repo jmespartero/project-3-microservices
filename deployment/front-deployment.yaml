@@ -5,7 +5,7 @@ metadata:
   labels:
     app: udagram-frontend
 spec:
-  replicas: 2
+  replicas: 1
   selector:
     matchLabels:
       app: udagram-frontend
@@ -16,6 +16,8 @@ spec:
     spec:
       containers:
       - name: udagram-frontend
-        image: jmespartero/udagram-frontend
+        image: jmespartero/udagram-frontend:v7
+        imagePullPolicy: Always
         ports:
         - containerPort: 80
+      restartPolicy: Always
